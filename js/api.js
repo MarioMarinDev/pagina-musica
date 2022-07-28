@@ -1,9 +1,14 @@
 // Variables principales
-const uri = "https://raw.githubusercontent.com/LAL0YT/API-Top-10/master/";
+const uri = "https://raw.githubusercontent.com/MarioMarinDev/pagina-musica-api/master/";
+const el_play_pause = document.querySelector("#player .play-pause");
+const el_volumen = document.querySelector("#player .volumen");
 const top_contenedor = document.querySelectorAll("#top-contenedor .top");
 const top_contenedores = top_contenedor.length;
-const canciones_max = 10;
-let posicion_actual = 1;
+const audio = document.getElementById("audio");
+const source = document.querySelector("#audio source");
+const reproductor = document.getElementById("player");
+const canciones_max = 6;
+let posicion_actual = 0;
 
 // Obtener una canción por su posición
 function obtener_cancion(posicion) {
@@ -23,24 +28,45 @@ function mostrar_actuales() {
       // Obtener imagen de base de datos y asignar
       let el_imagen = top_contenedor[i].querySelector("img");
       el_imagen.src = uri + datos.imagen;
+      // Obtener audio y guardarlo en un atributo
+      el_imagen.setAttribute("data-audio", datos.audio);
+      // Crear evento al dar clic a la imagen
+      el_imagen.addEventListener("click", function() {
+        // Activar botón de reproducir/pausar
+        el_play_pause.classList.remove("desactivado");
+        // Actualizar información del reproductor
+        actualizar_reproductor(datos.imagen, datos.nombre, datos.artista);
+        // Cambiar de audio
+        source.src = uri + datos.audio;
+        audio.load();
+        audio.play();
+      });
       // Obtener posición de base de datos y asignar
       let el_numero = top_contenedor[i].querySelector(".numero");
-      el_numero.innerHTML = datos.posicion;
+      el_numero.innerHTML = i + 1 + posicion_actual;
       // Obtener nombre de canción de BD y asignar
       let el_nombre = top_contenedor[i].querySelector(".nombre");
       el_nombre.innerHTML = datos.nombre;
       // Obtener artista 1 de BD y asignar
       let el_artista = top_contenedor[i].querySelector(".artista");
-      el_artista.innerHTML = datos.artista1;
+      el_artista.innerHTML = datos.artista;
       // Checar si existe artista 2 y en caso de existir asignar
       if(datos.artista2 != undefined) {
         el_artista.innerHTML += " y " + datos.artista2;
       }
-      // Obtener número de vistas y asignar
-      let el_vistas = top_contenedor[i].querySelector(".vistas");
-      el_vistas.innerHTML = datos.visitas + "M vistas";
     });
   }
+}
+
+function actualizar_reproductor(imagen, cancion, autor) {
+  // Asignar nueva imagen al reproductor
+  let el_imagen = reproductor.querySelector("img");
+  el_imagen.src = uri + imagen;
+  // Asignar datos de texto
+  let el_cancion = reproductor.querySelector(".cancion");
+  el_cancion.innerHTML = cancion;
+  let el_autor = reproductor.querySelector(".autor");
+  el_autor.innerHTML = autor;
 }
 
 // Mostrar al inicio información
@@ -61,7 +87,7 @@ el_siguiente.addEventListener("click", function() {
   posicion_actual++;
   mostrar_actuales();
   // Checar si ya no hay más canciones
-  if(posicion_actual + top_contenedores > canciones_max) {
+  if(posicion_actual + top_contenedores >= canciones_max) {
     // Agregar clase de desactivado
     el_siguiente.classList.add("desactivado");
   }
@@ -79,10 +105,23 @@ el_anterior.addEventListener("click", function() {
   posicion_actual--;
   mostrar_actuales();
   // Checar si ya se está mostrando el número 1
-  if(posicion_actual <= 1) {
+  if(posicion_actual <= 0) {
     // Agregar clase de desactivado
     el_anterior.classList.add("desactivado");
   }
   // Activar el botón de siguiente
   el_siguiente.classList.remove("desactivado");
+});
+
+// Eventos del reproductor
+el_play_pause.addEventListener("click", function() {
+  if(audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+});
+
+el_volumen.addEventListener("change", function() {
+  audio.volume = el_volumen.value / 100;
 });

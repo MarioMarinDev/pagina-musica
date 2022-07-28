@@ -6,6 +6,9 @@ body {
   font-family: "Montserrat";
   background-color: rgb(40, 40, 40);
   color: rgb(244, 244, 244);
+  margin: 0;
+}
+#contenido-principal {
   padding: 100px;
 }
 #top-contenedor {
@@ -32,4 +35,63 @@ button.nav.desactivado {
 .top .numero {
   font-size: larger;
   font-weight: 700;
+}
+
+#player {
+  background-color: black;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#player button {
+  font-size: xx-large;
+  background-color: transparent;
+  border-style: none;
+  cursor: pointer;
+}
+
+#player button.desactivado {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#player>div {
+  width: 30vw;
+}
+
+#player-info {
+  display: flex;
+}
+
+#player-info img {
+  height: 10vh;
+  margin-right: 10px;
+}
+
+#player-info img:not([src]) {
+  display: none;
+}
+
+#player-info .cancion {
+  font-size: large;
+  font-weight: 700;
+}
+
+#player-info .autor {
+  font-size: small;
+  margin-top: 0;
+}
+
+#player-controls {
+  text-align: center;
+}
+
+#player-volume {
+  text-align: right;
+  margin-right: 20px;
 }
